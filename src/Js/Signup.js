@@ -13,35 +13,59 @@
    } */
 
 window.onload =()=>{
+    //Add events in fields
+    document.getElementById('email').addEventListener('blur',EmailValid)
+    document.getElementById('emailconfirm').addEventListener('blur',EmailValid)
+    document.getElementById('password').addEventListener('blur',PasswordValid)
+    document.getElementById('passwordconfirm').addEventListener('blur',PasswordValid)
+    //Submit user infos.
     document.getElementById('submitbttn').addEventListener('click',getElementsonclick)
+
 }
 //Validations
-
-function Validations(data) {
-    const email = data.email;
-    const emailconfirm = data.emailconfirm;
-    const StatusValidations = {statusValid:false,message:''}
-    //Declarations
-    function EmailValid(email){   
-        debugger
-        const RegEx = /^\S+@\S+\.\S+$/
-        return RegEx.test(email)
-
-    }
-    function EmailValidationAndEquals(email,emailconfirm) {      
-        
-        if(!EmailValid(email) || !EmailValid(emailconfirm)){
-            console.log("Não está valido")
+//This function valid the email field are empty or invalid
+function EmailValid(){   
+    const email = this.value
+    const RegEx = /^\S+@\S+\.\S+$/
+    
+    if(!RegEx.test(email)){
+        if(email == ""){
+            return alert("The email or email confirm field is empty! ")
         }
+        return alert('Email invalid!')
+    }    
+}
+//This function valid the password field are empty or invalid
+function PasswordValid(){
+    
+}
+
+//This function valid the email and email confirm is equals
+function EmailValidationEquals(email,emailconfirm) {      
+        debugger
+    const valid = {valid:false, message:''}
+    if(!(email === emailconfirm)){        
+        valid.message = 'Email and Email Confirmation is not equals!'       
+        return valid
     }
-    //Call All Functions
-    EmailValidationAndEquals(email,emailconfirm)
+    valid.valid = true    
+    return valid
+}
+
+function ValidationsForEquals(data) {        
+    const emailValid= EmailValidationEquals(data.email,data.emailconfirm)
+    const passwordValid= EmailValidationEquals(data.email,data.emailconfirm)
+    const StatusValidations ={
+        emailValid: emailValid,
+        passwordValid:passwordValid
+    }
+    //Call functions over validate all fields 
     return StatusValidations;
 }
 //SignUp in server
 function SignUp(parameters){
-    debugger
-    console.log(parameters)
+    
+    localStorage.setItem('userParameters',parameters)
 }
 function getElementsonclick(){ 
     
@@ -50,19 +74,18 @@ function getElementsonclick(){
         fullname: document.getElementById('fullname').value,
         birthday: document.getElementById('birthday').value,
         email: document.getElementById('email').value,
-        emailconfirmation: document.getElementById('emailconfirmation').value,
+        emailconfirm: document.getElementById('emailconfirm').value,
         password: document.getElementById('password').value,
         passwordconfirm: document.getElementById('passwordconfirm').value
         /* emailconfirmation: urlParams.get('emailconfirmation')
         emailconfirmation: urlParams.get('emailconfirmation')*/
     }  
-    
-    const val = Validations(userdatas)
-    if(val){
-        SignUp(userdatas)
-    }else{
+    const valid = ValidationsForEquals(userdatas)
+     if(!valid.passwordValid || !valid.emailValid){
         
-    }
+     }  
+    SignUp(userdatas)
+    
    
     
 
