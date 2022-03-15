@@ -9,3 +9,6 @@ input::-webkit-inner-spin-button {
     padding: 0;
 
 }
+.inputDiv{
+    margin: 5px;
+}
