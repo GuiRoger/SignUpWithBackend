@@ -18,6 +18,8 @@ window.onload =()=>{
     document.getElementById('emailconfirm').addEventListener('blur',EmailValid)
     document.getElementById('password').addEventListener('blur',PasswordValid)
     document.getElementById('passwordconfirm').addEventListener('blur',PasswordValid)
+    document.getElementById('passwordconfirm').addEventListener('blur',PasswordValid)
+    document.getElementById('firstname').addEventListener('blur',EmptyField)
     //Submit user infos.
     document.getElementById('submitbttn').addEventListener('click',getElementsonclick)
 
@@ -39,7 +41,11 @@ function EmailValid(){
 function PasswordValid(){
     
 }
-
+//This function valid the password field are empty or invalid
+function EmptyField(){
+    this.value 
+    debugger
+}
 //This function valid the email and email confirm is equals
 function EmailValidationEquals(email,emailconfirm) {      
         debugger
@@ -81,7 +87,7 @@ function getElementsonclick(){
         emailconfirmation: urlParams.get('emailconfirmation')*/
     }  
     const valid = ValidationsForEquals(userdatas)
-     if(!valid.passwordValid || !valid.emailValid){
+     if(!valid.passwordValid.valid || !valid.emailValid.valid){
         
      }  
     SignUp(userdatas)
