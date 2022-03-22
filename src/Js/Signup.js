@@ -13,54 +13,90 @@
    } */
 
 window.onload =()=>{
+    //Declaration of components
+    
     //Add events in fields
-    document.getElementById('email').addEventListener('blur',EmailValid)
-    document.getElementById('emailconfirm').addEventListener('blur',EmailValid)
-    document.getElementById('password').addEventListener('blur',PasswordValid)
-    document.getElementById('passwordconfirm').addEventListener('blur',PasswordValid)
-    document.getElementById('passwordconfirm').addEventListener('blur',PasswordValid)
-    document.getElementById('firstname').addEventListener('blur',EmptyField)
+    document.getElementById('email').addEventListener('blur',CheckFields)
+    document.getElementById('emailconfirm').addEventListener('blur',CheckFields)
+    document.getElementById('password').addEventListener('blur',CheckFields)
+    document.getElementById('passwordconfirm').addEventListener('blur',CheckFields)
+    document.getElementById('passwordconfirm').addEventListener('blur',CheckFields)
+    document.getElementById('firstname').addEventListener('blur',CheckFields)
+    document.getElementById('lastname').addEventListener('blur',CheckFields)
+
     //Submit user infos.
     document.getElementById('submitbttn').addEventListener('click',getElementsonclick)
 
 }
 //Validations
 //This function valid the email field are empty or invalid
-function EmailValid(){   
-    const email = this.value
+function EmailValid(email){   
+    //Get the button 
+    var btnsbmt= document.querySelector("#submitbttn")
     const RegEx = /^\S+@\S+\.\S+$/
-    
-    if(!RegEx.test(email)){
-        if(email == ""){
-            return alert("The email or email confirm field is empty! ")
-        }
-        return alert('Email invalid!')
+    if(!RegEx.test(email)){    
+        btnsbmt.disabled = true    
+        return alert('Email or Email Confirmation invalid!')
     }    
+    btnsbmt.disabled = false
 }
 //This function valid the password field are empty or invalid
-function PasswordValid(){
+function PasswordValid(password){       
+    //Get the button
+    var btnsbmt= document.querySelector("#submitbttn")
+    if(password.length < 8 ){     
+        btnsbmt.disabled = true
+        return alert('Password or Password Confirmation invalid!')
+    }  
+    btnsbmt.disabled = false
+}
+//This function valid the value of field.
+function EmptyField(value,name){
+    //Get the button
+    var btnsbmt= document.querySelector("#submitbttn")
+    if(value  == ""){     
+        debugger
+        
+        btnsbmt.disabled = true
+        return alert("The field "+name+" is empty! ")        
+    }   
+    btnsbmt.disabled = false
+    return true
+}
+//This function checks if the field is empty and if it is valid
+function CheckFields(){
     
-}
-//This function valid the password field are empty or invalid
-function EmptyField(){
-    this.value 
-    debugger
+    if(EmptyField(this.value,this.name)){
+        const idField = this.id
+
+        if(idField.includes("email")){
+            EmailValid(this.value)
+        }
+        if(idField.includes("password")){
+            PasswordValid(this.value)
+        }
+         
+    }
+    
+
+    
 }
 //This function valid the email and email confirm is equals
-function EmailValidationEquals(email,emailconfirm) {      
-        debugger
+function ValidationEquals(data,dataconfirm,name){      
+    debugger
     const valid = {valid:false, message:''}
-    if(!(email === emailconfirm)){        
-        valid.message = 'Email and Email Confirmation is not equals!'       
-        return valid
+    if(!(data === dataconfirm)){        
+        valid.message = 'Field and your Confirmation is not equals!'   
+
+        return alert(valid.message)
     }
     valid.valid = true    
     return valid
 }
 
-function ValidationsForEquals(data) {        
-    const emailValid= EmailValidationEquals(data.email,data.emailconfirm)
-    const passwordValid= EmailValidationEquals(data.email,data.emailconfirm)
+function ValidationsForEquals(data) {         
+    const emailValid= ValidationEquals(data.email,data.emailconfirm)
+    const passwordValid= ValidationEquals(data.password,data.passwordconfirm)
     const StatusValidations ={
         emailValid: emailValid,
         passwordValid:passwordValid
@@ -70,14 +106,16 @@ function ValidationsForEquals(data) {
 }
 //SignUp in server
 function SignUp(parameters){
-    
-    localStorage.setItem('userParameters',parameters)
+    debugger
+    //Save in local storage the all datas users
+    window.localStorage.setItem("userData",JSON.stringify(parameters))
 }
-function getElementsonclick(){ 
-    
+
+//Get elements and building a object to send a method SignUp
+function getElementsonclick(){
     var userdatas = {      
         firstname: document.getElementById('firstname').value,
-        fullname: document.getElementById('fullname').value,
+        lastname: document.getElementById('lastname').value,
         birthday: document.getElementById('birthday').value,
         email: document.getElementById('email').value,
         emailconfirm: document.getElementById('emailconfirm').value,
@@ -87,12 +125,10 @@ function getElementsonclick(){
         emailconfirmation: urlParams.get('emailconfirmation')*/
     }  
     const valid = ValidationsForEquals(userdatas)
-     if(!valid.passwordValid.valid || !valid.emailValid.valid){
-        
-     }  
-    SignUp(userdatas)
-    
-   
+     if(valid.passwordValid.valid && valid.emailValid.valid){        
+        //Save in local storage the all datas users
+        SignUp(userdatas)
+     }      
     
 
 }

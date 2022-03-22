@@ -12,3 +12,11 @@ input::-webkit-inner-spin-button {
 .inputDiv{
     margin: 5px;
 }
+
+#submitbttn{
+    width: 250px;
+    height: 50px;
+}
+#submitbttn :disabled{
+    background: #ccc;
+}
